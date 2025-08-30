@@ -82,6 +82,8 @@ elif options.RNN_type == 'LSTM':
     raise NotImplementedError
 
 # Put model on GPU if using GPU
+if options.device == "cuda":
+    print("Using CUDA")
 model = model.to(options.device)
 
 trajectory_generator = TrajectoryGenerator(options, place_cells)
