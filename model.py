@@ -65,10 +65,9 @@ class RNN(torch.nn.Module):
             loss: Avg. loss for this training batch.
             err: Avg. decoded position error in cm.
         """
-        y = pc_outputs
-        preds = self.predict(inputs)
-        yhat = self.softmax(self.predict(inputs))
-        loss = -(y * torch.log(yhat)).sum(-1).mean()
+        y: torch.Tensor = pc_outputs
+        preds: torch.Tensor = self.predict(inputs)
+        loss = torch.nn.functional.cross_entropy(preds.flatten(0, 1), y.flatten(0, 1))
 
         # Weight regularization
         loss += self.weight_decay * (self.RNN.weight_hh_l0**2).sum()
