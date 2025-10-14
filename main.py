@@ -57,7 +57,7 @@ parser.add_argument(
     help="device to use for training",
 )
 parser.add_argument(
-    "--seed", default=0, help="seed number for all numpy random number generator"
+    "--seed", default=None, help="seed number for all numpy random number generator"
 )
 
 options = parser.parse_args()
@@ -65,7 +65,8 @@ options.run_ID = generate_run_ID(options)
 
 print(f"Using device: {options.device}")
 
-np.random.seed(int(options.seed))
+if options.seed:
+    np.random.seed(int(options.seed))
 
 place_cells = PlaceCells(options)
 if options.RNN_type == "RNN":
