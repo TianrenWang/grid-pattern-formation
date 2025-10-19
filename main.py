@@ -22,10 +22,10 @@ parser.add_argument(
 parser.add_argument("--n_epochs", default=100, help="number of training epochs")
 parser.add_argument("--n_steps", default=1000, help="batches per epoch")
 parser.add_argument(
-    "--batch_size", default=200, help="number of trajectories per batch"
+    "--batch_size", default=200, help="number of trajectories per batch", type=int
 )
 parser.add_argument(
-    "--sequence_length", default=20, help="number of steps in trajectory"
+    "--sequence_length", default=20, help="number of steps in trajectory", type=int
 )
 parser.add_argument(
     "--learning_rate", default=1e-4, help="gradient descent learning rate"
