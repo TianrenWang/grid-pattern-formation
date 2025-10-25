@@ -89,7 +89,10 @@ class Trainer(object):
 
                 # Save a picture of rate maps
                 save_ratemaps(
-                    self.model, self.trajectory_generator, self.options, step=epoch_idx
+                    self.model,
+                    self.trajectory_generator,
+                    self.options,
+                    step=epoch_idx + 1,
                 )
 
                 print(
