@@ -94,7 +94,7 @@ class Trainer(object):
 
                 print(
                     "Epoch: {}/{}. Date: {}. Loss: {}. Err: {}cm".format(
-                        epoch_idx,
+                        epoch_idx + 1,
                         n_epochs,
                         str(datetime.datetime.now())[:-7],
                         np.round(loss, 2),
