@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import torch
 import numpy as np
+import datetime
 
 from visualize import save_ratemaps
 import os
@@ -75,12 +76,12 @@ class Trainer(object):
                 # Log error rate to progress bar
                 # tbar.set_description('Error = ' + str(np.int(100*err)) + 'cm')
 
-            if save:
+            if save and ((epoch_idx + 1) % 10 == 0 or epoch_idx == 0):
                 # Save checkpoint
-                ckpt_path = os.path.join(
-                    self.ckpt_dir, "epoch_{}.pth".format(epoch_idx)
-                )
-                torch.save(self.model.state_dict(), ckpt_path)
+                # ckpt_path = os.path.join(
+                #     self.ckpt_dir, "epoch_{}.pth".format(epoch_idx)
+                # )
+                # torch.save(self.model.state_dict(), ckpt_path)
                 torch.save(
                     self.model.state_dict(),
                     os.path.join(self.ckpt_dir, "most_recent_model.pth"),
@@ -92,9 +93,10 @@ class Trainer(object):
                 )
 
             print(
-                "Epoch: {}/{}. Loss: {}. Err: {}cm".format(
+                "Epoch: {}/{}. Date: {}. Loss: {}. Err: {}cm".format(
                     epoch_idx,
                     n_epochs,
+                    str(datetime.datetime.now())[:-7],
                     np.round(loss, 2),
                     np.round(100 * err, 2),
                 )
