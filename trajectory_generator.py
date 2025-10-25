@@ -1,12 +1,64 @@
 # -*- coding: utf-8 -*-
 import torch
 import numpy as np
+import matplotlib.pyplot as plt
 
 
 class TrajectoryGenerator(object):
     def __init__(self, options, place_cells):
         self.options = options
         self.place_cells = place_cells
+
+    def plot_trajectory(self, traj, box_width, box_height, idx=0, step=2):
+        """
+        Visualize one trajectory from traj dict.
+
+        Args:
+            traj: dictionary containing trajectory info
+            box_width, box_height: dimensions of the environment
+            idx: which trajectory to plot from the batch (default: 0)
+            step: plot an arrow every 'step' frames
+        """
+        # Extract trajectory for one rat
+        x = traj["target_x"][idx]  # shape (samples,)
+        y = traj["target_y"][idx]
+        hd = traj["target_hd"][idx]  # head directions in radians
+
+        # Also add starting point
+        x0 = traj["init_x"][idx, 0]
+        y0 = traj["init_y"][idx, 0]
+        hd0 = traj["init_hd"][idx, 0]
+
+        x = np.concatenate([[x0], x])
+        y = np.concatenate([[y0], y])
+        hd = np.concatenate([[hd0], hd])
+
+        # Plot trajectory
+        plt.figure(figsize=(6, 6))
+        plt.plot(x, y, "-o", markersize=2, label="trajectory")
+
+        # Add arrows for head direction
+        for t in range(0, len(x), step):
+            dx = 0.1 * np.cos(hd[t])
+            dy = 0.1 * np.sin(hd[t])
+            plt.arrow(
+                x[t], y[t], dx, dy, head_width=0.05, head_length=0.08, fc="r", ec="r"
+            )
+
+        # Draw box boundaries
+        plt.axhline(y=-box_height / 2, color="k")
+        plt.axhline(y=box_height / 2, color="k")
+        plt.axvline(x=-box_width / 2, color="k")
+        plt.axvline(x=box_width / 2, color="k")
+
+        plt.xlim([-box_width / 2 - 0.2, box_width / 2 + 0.2])
+        plt.ylim([-box_height / 2 - 0.2, box_height / 2 + 0.2])
+        plt.gca().set_aspect("equal", adjustable="box")
+        plt.xlabel("x position (m)")
+        plt.ylabel("y position (m)")
+        plt.title(f"Trajectory {idx}")
+        plt.legend()
+        plt.show()
 
     def avoid_wall(self, position, hd, box_width, box_height):
         """
@@ -109,6 +161,10 @@ class TrajectoryGenerator(object):
         traj["target_hd"] = head_dir[:, 1:-1]
         traj["target_x"] = position[:, 2:, 0]
         traj["target_y"] = position[:, 2:, 1]
+
+        # for i in range(5):
+        #     self.plot_trajectory(traj, box_width, box_height, i)
+        # raise Exception("dog")
 
         return traj
 
