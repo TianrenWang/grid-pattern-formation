@@ -92,12 +92,12 @@ class Trainer(object):
                     self.model, self.trajectory_generator, self.options, step=epoch_idx
                 )
 
-            print(
-                "Epoch: {}/{}. Date: {}. Loss: {}. Err: {}cm".format(
-                    epoch_idx,
-                    n_epochs,
-                    str(datetime.datetime.now())[:-7],
-                    np.round(loss, 2),
-                    np.round(100 * err, 2),
+                print(
+                    "Epoch: {}/{}. Date: {}. Loss: {}. Err: {}cm".format(
+                        epoch_idx,
+                        n_epochs,
+                        str(datetime.datetime.now())[:-7],
+                        np.round(loss, 2),
+                        np.round(100 * err, 2),
+                    )
                 )
-            )
