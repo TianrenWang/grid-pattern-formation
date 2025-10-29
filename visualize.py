@@ -104,10 +104,8 @@ def compute_ratemaps(
         g[index] = g_batch
         pos[index] = pos_batch
 
-        x_batch = (pos_batch[:, 0] + options.box_width / 2) / (options.box_width) * res
-        y_batch = (
-            (pos_batch[:, 1] + options.box_height / 2) / (options.box_height) * res
-        )
+        x_batch = pos_batch[:, 0] / (options.box_width) * res
+        y_batch = pos_batch[:, 1] / (options.box_height) * res
 
         for i in range(options.batch_size * options.sequence_length):
             x = x_batch[i]
