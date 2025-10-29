@@ -46,13 +46,13 @@ class TrajectoryGenerator(object):
             )
 
         # Draw box boundaries
-        plt.axhline(y=-box_height / 2, color="k")
-        plt.axhline(y=box_height / 2, color="k")
-        plt.axvline(x=-box_width / 2, color="k")
-        plt.axvline(x=box_width / 2, color="k")
+        plt.axhline(y=0, color="k")
+        plt.axhline(y=box_height, color="k")
+        plt.axvline(x=0, color="k")
+        plt.axvline(x=box_width, color="k")
 
-        plt.xlim([-box_width / 2 - 0.2, box_width / 2 + 0.2])
-        plt.ylim([-box_height / 2 - 0.2, box_height / 2 + 0.2])
+        plt.xlim([-0.2, box_width + 0.2])
+        plt.ylim([-0.2, box_height + 0.2])
         plt.gca().set_aspect("equal", adjustable="box")
         plt.xlabel("x position (m)")
         plt.ylabel("y position (m)")
@@ -67,10 +67,10 @@ class TrajectoryGenerator(object):
         x = position[:, 0]
         y = position[:, 1]
         dists = [
-            box_width / 2 - x,
-            box_height / 2 - y,
-            box_width / 2 + x,
-            box_height / 2 + y,
+            box_width - x,
+            box_height - y,
+            x,
+            y,
         ]
         d_wall = np.min(dists, axis=0)
         angles = np.arange(4) * np.pi / 2
@@ -99,10 +99,8 @@ class TrajectoryGenerator(object):
         # Initialize variables
         position = np.zeros([batch_size, samples + 2, 2])
         head_dir = np.zeros([batch_size, samples + 2])
-        position[:, 0, 0] = np.random.uniform(-box_width / 2, box_width / 2, batch_size)
-        position[:, 0, 1] = np.random.uniform(
-            -box_height / 2, box_height / 2, batch_size
-        )
+        position[:, 0, 0] = np.random.uniform(0, box_width, batch_size)
+        position[:, 0, 1] = np.random.uniform(0, box_height, batch_size)
         head_dir[:, 0] = np.random.uniform(0, 2 * np.pi, batch_size)
         velocity = np.zeros([batch_size, samples + 2])
 
