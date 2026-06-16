@@ -1,5 +1,4 @@
 numpy
-tensorflow
 scipy
 matplotlib
 imageio
