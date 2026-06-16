@@ -14,7 +14,7 @@ parser = argparse.ArgumentParser()
 parser.add_argument(
     "--save_dir",
     # default='/mnt/fs2/bsorsch/grid_cells/models/',
-    default="output/",
+    default="models/",
     help="directory to save trained models",
 )
 parser.add_argument(
