@@ -17,8 +17,8 @@ class PlaceCells(object):
         self.softmax = torch.nn.Softmax(dim=-1)
 
         # Randomly tile place cell centers across environment
-        usx = np.random.uniform(-self.box_width / 2, self.box_width / 2, (self.Np,))
-        usy = np.random.uniform(-self.box_width / 2, self.box_width / 2, (self.Np,))
+        usx = np.random.uniform(0, self.box_width, (self.Np,))
+        usy = np.random.uniform(0, self.box_height, (self.Np,))
         self.us = torch.tensor(np.vstack([usx, usy]).T)
         # If using a GPU, put on GPU
         self.us = self.us.to(self.device)
@@ -78,8 +78,8 @@ class PlaceCells(object):
 
     def grid_pc(self, pc_outputs, res=32):
         """Interpolate place cell outputs onto a grid"""
-        coordsx = np.linspace(-self.box_width / 2, self.box_width / 2, res)
-        coordsy = np.linspace(-self.box_height / 2, self.box_height / 2, res)
+        coordsx = np.linspace(0, self.box_width, res)
+        coordsy = np.linspace(0, self.box_height, res)
         grid_x, grid_y = np.meshgrid(coordsx, coordsy)
         grid = np.stack([grid_x.ravel(), grid_y.ravel()]).T
 
@@ -98,8 +98,8 @@ class PlaceCells(object):
         """Compute spatial covariance matrix of place cell outputs"""
         pos = np.array(
             np.meshgrid(
-                np.linspace(-self.box_width / 2, self.box_width / 2, res),
-                np.linspace(-self.box_height / 2, self.box_height / 2, res),
+                np.linspace(0, self.box_width, res),
+                np.linspace(0, self.box_height, res),
             )
         ).T
 

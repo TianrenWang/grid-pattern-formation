@@ -1,5 +1,4 @@
 import numpy as np
-import tensorflow as tf
 import torch.cuda
 import argparse
 
@@ -10,7 +9,6 @@ from trajectory_generator import TrajectoryGenerator
 from model import RNN
 from trainer import Trainer
 
-tf.compat.v1.logging.set_verbosity(tf.compat.v1.logging.ERROR)
 
 parser = argparse.ArgumentParser()
 parser.add_argument(

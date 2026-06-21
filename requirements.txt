@@ -1,8 +1,7 @@
 numpy
-tensorflow
 scipy
 matplotlib
 imageio
 opencv-python
 tqdm
-torch==2.6.0
+torch
