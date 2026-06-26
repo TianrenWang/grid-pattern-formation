@@ -19,7 +19,7 @@ class Trainer(object):
         self.err = []
 
         # Set up checkpoints
-        self.ckpt_dir = os.path.join(options.save_dir, options.run_ID)
+        self.ckpt_dir = os.path.join("models", options.exp_name)
         ckpt_path = os.path.join(self.ckpt_dir, "most_recent_model.pth")
         if restore and os.path.isdir(self.ckpt_dir) and os.path.isfile(ckpt_path):
             self.model.load_state_dict(torch.load(ckpt_path))

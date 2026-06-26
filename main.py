@@ -3,7 +3,6 @@ import torch.cuda
 import argparse
 
 
-from utils import generate_run_ID
 from place_cells import PlaceCells
 from trajectory_generator import TrajectoryGenerator
 from model import RNN
@@ -12,10 +11,7 @@ from trainer import Trainer
 
 parser = argparse.ArgumentParser()
 parser.add_argument(
-    "--save_dir",
-    # default='/mnt/fs2/bsorsch/grid_cells/models/',
-    default="models/",
-    help="directory to save trained models",
+    "--exp_name", default="default", help="name of the folder to save this run to"
 )
 parser.add_argument(
     "--n_epochs", default=100, help="number of training epochs", type=int
@@ -74,7 +70,6 @@ parser.add_argument(
 )
 
 options = parser.parse_args()
-options.run_ID = generate_run_ID(options)
 
 print(f"Using device: {options.device}")
 

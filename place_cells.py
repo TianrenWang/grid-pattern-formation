@@ -17,12 +17,14 @@ class PlaceCells(object):
         self.softmax = torch.nn.Softmax(dim=-1)
 
         # Randomly tile place cell centers across environment
+        np.random.seed(0)
         usx = np.random.uniform(0, self.box_width, (self.Np,))
         usy = np.random.uniform(0, self.box_height, (self.Np,))
         self.us = torch.tensor(np.vstack([usx, usy]).T)
         # If using a GPU, put on GPU
         self.us = self.us.to(self.device)
         # self.us = torch.tensor(np.load('models/example_pc_centers.npy')).cuda()
+        np.random.seed(None)
 
     def get_activation(self, pos):
         """

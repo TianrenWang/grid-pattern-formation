@@ -2,8 +2,6 @@
 import numpy as np
 from matplotlib import pyplot as plt
 
-import scipy
-import scipy.stats
 from imageio import imsave
 import cv2
 
@@ -136,7 +134,7 @@ def save_ratemaps(model, trajectory_generator, options, step, res=20, n_avg=None
         model, trajectory_generator, options, res=res, n_avg=n_avg
     )
     rm_fig = plot_ratemaps(activations, n_plots=len(activations))
-    imdir = options.save_dir + "/" + options.run_ID
+    imdir = "models/" + options.exp_name
     imsave(imdir + "/" + str(step) + ".png", rm_fig)
 
 
