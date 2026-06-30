@@ -46,12 +46,12 @@ class Trainer(object):
         """
         self.model.zero_grad()
 
-        loss, err = self.model.compute_loss(inputs, pc_outputs, pos)
+        loss, err, abs_coord_err = self.model.compute_loss(inputs, pc_outputs, pos)
 
         loss.backward()
         self.optimizer.step()
 
-        return loss.item(), err.item()
+        return loss.item(), err.item(), abs_coord_err.item()
 
     def train(self, n_epochs: int = 1000, n_steps=10, save=True):
         """
@@ -69,7 +69,7 @@ class Trainer(object):
         for epoch_idx in range(n_epochs):
             for step_idx in range(n_steps):
                 inputs, pc_outputs, pos = next(gen)
-                loss, err = self.train_step(inputs, pc_outputs, pos)
+                loss, err, abs_err = self.train_step(inputs, pc_outputs, pos)
                 self.loss.append(loss)
                 self.err.append(err)
 
@@ -96,11 +96,11 @@ class Trainer(object):
                 )
 
                 print(
-                    "Epoch: {}/{}. Date: {}. Loss: {}. Err: {}cm".format(
+                    "Epoch: {}/{}. Date: {}. AbsErr: {}cm. Err: {}cm".format(
                         epoch_idx + 1,
                         n_epochs,
                         str(datetime.datetime.now())[:-7],
-                        np.round(loss, 2),
+                        np.round(100 * abs_err, 2),
                         np.round(100 * err, 2),
                     )
                 )

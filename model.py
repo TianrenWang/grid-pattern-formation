@@ -21,6 +21,7 @@ class RNN(torch.nn.Module):
         )
         # Linear read-out weights
         self.decoder = torch.nn.Linear(self.Ng, self.Np, bias=False)
+        self.coordinateDecoder = torch.nn.Linear(self.Ng, 2, bias=False)
 
         self.softmax = torch.nn.Softmax(dim=-1)
 
@@ -38,7 +39,7 @@ class RNN(torch.nn.Module):
         g, _ = self.RNN(v, init_state)
         return g
 
-    def predict(self, inputs):
+    def predict(self, inputs) -> tuple[torch.Tensor, torch.Tensor]:
         """
         Predict place cell code.
         Args:
@@ -48,9 +49,12 @@ class RNN(torch.nn.Module):
             place_preds: Predicted place cell activations with shape
                 [batch_size, sequence_length, Np].
         """
-        place_preds = self.decoder(self.g(inputs))
+        grid_code = self.g(inputs)
+        place_preds = self.decoder(grid_code)
+        grid_code = grid_code.detach()
+        coordinate_preds = self.coordinateDecoder(grid_code)
 
-        return place_preds
+        return place_preds, coordinate_preds
 
     def compute_loss(self, inputs, pc_outputs, pos):
         """
@@ -66,8 +70,11 @@ class RNN(torch.nn.Module):
             err: Avg. decoded position error in cm.
         """
         y: torch.Tensor = pc_outputs
-        preds: torch.Tensor = self.predict(inputs)
+        preds, coordinatePreds = self.predict(inputs)
         loss = torch.nn.functional.cross_entropy(preds.flatten(0, 1), y.flatten(0, 1))
+        loss += torch.nn.functional.mse_loss(
+            pos.flatten(0, 1), coordinatePreds.flatten(0, 1)
+        )
 
         # Weight regularization
         loss += self.weight_decay * (self.RNN.weight_hh_l0**2).sum()
@@ -75,5 +82,6 @@ class RNN(torch.nn.Module):
         # Compute decoding error
         pred_pos = self.place_cells.get_nearest_cell_pos(preds)
         err = torch.sqrt(((pos - pred_pos) ** 2).sum(-1)).mean()
+        abs_coord_err = torch.sqrt(((pos - coordinatePreds) ** 2).sum(-1)).mean()
 
-        return loss, err
+        return loss, err, abs_coord_err
